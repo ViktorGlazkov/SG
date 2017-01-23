@@ -9,7 +9,50 @@ public class Main {
 
     public static void main(String[] args) {
         printFibonacciNumbers(7);
-        printVampirNumbers();
+        printVampireNumbers();
+        printParserAnalize();
+    }
+
+    private static void printParserAnalize() {
+        long startTime;
+
+        System.out.println("parseInt\tvalueOf");
+        List<Integer> parseInt = new ArrayList<>();
+        List<Integer> valueOf = new ArrayList<>();
+
+        for (int i = ZERO; i < MAX; i++) {
+            startTime = System.nanoTime();
+            Integer.parseInt("12345611", 8);
+            printTime(startTime, parseInt);
+
+            startTime = System.nanoTime();
+            Integer.valueOf("12345611");
+            printTime(startTime, valueOf);
+            System.out.println();
+        }
+
+        System.out.println("-------------------");
+        System.out.println(getAverage(parseInt) + "\t\t" + getAverage(valueOf));
+        printLastLine();
+    }
+
+    private static void printTime(long startTime, List<Integer> list) {
+        long stopTime = System.nanoTime();
+        int elapsedTime = (int) (stopTime - startTime);
+        list.add(elapsedTime);
+        System.out.print(elapsedTime + "\t");
+    }
+
+    private static int getAverage(List<Integer> list) {
+        Integer sum = 0;
+        if (!list.isEmpty()) {
+            for (Integer mark : list) {
+                sum += mark;
+            }
+            return (int) (sum.doubleValue() / list.size());
+        }
+
+        return 0;
     }
 
     private static void printFibonacciNumbers(int n) {
@@ -27,10 +70,10 @@ public class Main {
             }
         }
 
-        System.out.println();
+        printLastLine();
     }
 
-    private static void printVampirNumbers() {
+    private static void printVampireNumbers() {
         int counter = ONE;
         for (int i = MIN; i < MAX; i++) {
             for (int j = i; j < MAX; j++) {
@@ -44,5 +87,10 @@ public class Main {
                 }
             }
         }
+        printLastLine();
+    }
+
+    private static void printLastLine() {
+        System.out.println("\n********************\n\n");
     }
 }
