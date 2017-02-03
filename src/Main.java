@@ -1,66 +1,70 @@
 import java.util.*;
 
 public class Main {
-    private static final int N = 7;
 
     public static void main(String[] args) {
-        List<List<Integer>> lists = new ArrayList<>();
-        Set<Integer> values = new HashSet<>();
+        Scanner scanner = new Scanner(System.in);
+        StringBuilder stringBuilder = new StringBuilder("");
+        int n;
 
-        int central = N % 2 == 0 ? N / 2 : (N / 2) + 1;
+        System.out.println("Enter a string amount: ");
+        n = scanner.nextInt();
 
-        Random r = new Random();
-
-        for (int i = 0; i < N * N; i++) {
-            while (values.size() != i + 1) {
-                values.add(r.nextInt(800) + 100);
-            }
+        for (int i = 0; i < n; i++) {
+            stringBuilder.append(scanner.next() + " ");
         }
 
-        List<Integer> vals = new ArrayList<>();
-        for (int value: values) {
-            vals.add(value);
-        }
-        for (int i = 0; i < N; i++) {
-            lists.add(vals.subList(i * N, i * N + N));
-        }
-
-        printLists(lists);
-
-        Point point = findMax(lists);
-        int cent = lists.get(central).get(central);
-        lists.get(central).get(central) = lists.get(point.getI()).get(point.getJ());
-        lists.get(point.getI()).get(point.getJ()) = cent;
-
-        printLists(lists);
+        sortString(stringBuilder, n);
+        printStringBuilder(stringBuilder, n);
     }
 
-    private static void printLists(List<List<Integer>> lists) {
-        for(List<Integer> list: lists) {
-            for (int i: list) {
-                System.out.print(i + " ");
+    private static void sortString(StringBuilder stringBuilder, int stringAmount) {
+        boolean wasReplaced;
+        Word firstWord;
+        Word secondWord;
+
+        do {
+            wasReplaced = false;
+
+            for (int i = 0; i < stringAmount - 1; i++) {
+                firstWord = getWordFromStringBuilder(stringBuilder, i);
+                secondWord = getWordFromStringBuilder(stringBuilder, i + 1);
+
+                if (firstWord.length() < secondWord.length()) {
+                    stringBuilder.replace(firstWord.getStartIndex(), secondWord.getEndIndex(),
+                            secondWord.getWord() + " " + firstWord.getWord());
+                    wasReplaced = true;
+                }
             }
-            System.out.println();
-        }
-        System.out.println();
+
+        } while (wasReplaced);
     }
 
-    private static Point findMax(List<List<Integer>> lists) {
-        Point point = new Point(0, 0);
-        int current = lists.get(0).get(0);
-        int max = current;
+    private static Word getWordFromStringBuilder(StringBuilder stringBuilder, int number) {
+        int emtyCharAmount = 0;
+        int startIndex = 0;
+        int endIndex = 0;
 
-        for (int i = 0; i < lists.size(); i++) {
-            int pos = lists.get(i).get(i);
-            int neg = lists.get(lists.size() - i).get(i);
-            current = pos > neg ? pos : neg;
-            if(current > max) {
-                max = current;
-                point.setI(pos > neg ? i : lists.size() - i);
-                point.setJ(i);
+        for(int i = 0; i < stringBuilder.length(); i++) {
+            if(emtyCharAmount == number) {
+                startIndex = i;
+                while (i < stringBuilder.length() && stringBuilder.charAt(i) != ' ') {
+                    i++;
+                }
+                endIndex = i;
+                break;
+            }
+            if(stringBuilder.charAt(i) == ' ') {
+                emtyCharAmount++;
             }
         }
 
-        return point;
+        return new Word(startIndex, endIndex, stringBuilder.substring(startIndex, endIndex));
+    }
+
+    private static void printStringBuilder(StringBuilder stringBuilder, int stringAmount) {
+        for(int i = 0; i < stringAmount; i++) {
+            System.out.println(getWordFromStringBuilder(stringBuilder, i).getWord());
+        }
     }
 }
