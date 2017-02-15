@@ -1,14 +1,15 @@
-import code.Printer;
-import framework.proxy.Proxy;
+import framework.Core;
 import framework.proxy.ProxyService;
 
-public class Main {
-    public static void main(String[] args) throws IllegalAccessException, InstantiationException {
-        ProxyService.createBeans();
+import java.util.Scanner;
 
-        Printer p2 = (Printer) Proxy.get(Printer.class);
-        p2.printWithoutWhitespaces("Hello world");
-        p2.print("abc");
-        p2.printReversed("abc");
+public class Main {
+    public static void main(String[] args) throws Exception {
+        ProxyService.createProxies();
+
+
+        Scanner scanner = new Scanner(System.in);
+        String str = scanner.nextLine();
+        Core.execute(str);
     }
 }
