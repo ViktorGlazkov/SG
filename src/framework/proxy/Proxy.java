@@ -1,10 +1,12 @@
 package framework.proxy;
 
 import java.util.HashMap;
+import java.util.IntSummaryStatistics;
+import java.util.List;
 import java.util.Map;
 
 public class Proxy {
-    private static Map<Class, Object> beans = new HashMap<>();
+    private static Map<Class, Object> proxies = new HashMap<>();
     private static Proxy ourInstance = new Proxy();
 
     public static Proxy getInstance() {
@@ -14,11 +16,15 @@ public class Proxy {
     private Proxy() {
     }
 
-    public static void put(Class key, Object value) {
-        beans.put(key, value);
+    public static void put(Class clazz, Object value) {
+        proxies.put(clazz, value);
     }
 
-    public static Object get(Class key) {
-        return beans.get(key);
+    public static void put(List<Class> list, Class clazz) {
+        //proxies.putAll(map);
+    }
+
+    public static Object get(Object key) {
+        return proxies.get(key.hashCode());
     }
 }
