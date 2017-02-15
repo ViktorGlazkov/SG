@@ -13,6 +13,16 @@ public class ClassFinder {
             = "Unable to get resources from path '%s'. Are you sure the package '%s' exists?";
 
     public static List<Class<?>> find(String scannedPackage) {
+        File scannedDir = getFile(scannedPackage);
+        return getClasses(scannedPackage, scannedDir);
+    }
+
+    public static List<Class<?>> findAnotated(String scannedPackage, Class annotation) {
+        File scannedDir = getFile(scannedPackage);
+        return getAnnotatedClasses(scannedPackage, scannedDir, annotation);
+    }
+
+    private static File getFile(String scannedPackage) {
         String scannedPath = scannedPackage.replace(PKG_SEPARATOR, DIR_SEPARATOR);
         URL scannedUrl = Thread.currentThread().getContextClassLoader().getResource(scannedPath);
 
@@ -20,8 +30,7 @@ public class ClassFinder {
             throw new IllegalArgumentException(String.format(BAD_PACKAGE_ERROR, scannedPath, scannedPackage));
         }
 
-        File scannedDir = new File(scannedUrl.getFile());
-        return getClasses(scannedPackage, scannedDir);
+        return new File(scannedUrl.getFile());
     }
 
     private static List<Class<?>> find(File file, String scannedPackage) {
@@ -56,5 +65,27 @@ public class ClassFinder {
             classes.addAll(find(file, scannedPackage));
         }
         return classes;
+    }
+
+    private static List<Class<?>> getAnnotatedClasses(String scannedPackage, File scannedDir, Class annotation) {
+        List<Class<?>> classes = new ArrayList<Class<?>>();
+        for (File file : scannedDir.listFiles()) {
+            for(Class clazz: find(file, scannedPackage)) {
+                if(clazz.isAnnotationPresent(annotation)) {
+                    classes.add(clazz);
+                }
+            }
+        }
+        return classes;
+    }
+
+    public static <T> List<Class<? extends T>> findAllMatchingTypes(Class<T> toFind) {
+        List<Class<?>> foundClasses = new ArrayList<Class<?>>();
+        List<Class<? extends T>> returnedClasses = new ArrayList<Class<? extends T>>();
+
+        for (Class<?> clazz : foundClasses) {
+            returnedClasses.add((Class<? extends T>) clazz);
+        }
+        return returnedClasses;
     }
 }
