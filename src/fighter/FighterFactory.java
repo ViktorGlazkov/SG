@@ -6,8 +6,6 @@ public class FighterFactory {
     private final static int HUNDRED = 100;
     private final static double FIFTY = 50.0;
     private final static int ONE = 1;
-    private final static String LEXICON = "ABCDEFGHIJKLMNOPQRSTUVWXYZ12345674890";
-    private final static Set<String> IDENTIFIERS = new HashSet<String>();
 
     public static Fighter getNewFighter() {
         Random random = new Random();
@@ -21,7 +19,7 @@ public class FighterFactory {
         int dexterity = (int) (d * coef);
         int intuition = (int) (i * coef);
 
-        return new Fighter(randomIdentifier(), strength, dexterity, intuition);
+        return new Fighter(NameFactory.randomIdentifier(), strength, dexterity, intuition);
     }
 
     public static List<Fighter> getFighterList(int n) {
@@ -31,21 +29,5 @@ public class FighterFactory {
         }
 
         return fighterList;
-    }
-
-    private static String randomIdentifier() {
-        Random random = new Random();
-        StringBuilder builder = new StringBuilder();
-
-        while(builder.toString().length() == 0) {
-            int length = random.nextInt(5)+5;
-            for(int i = 0; i < length; i++) {
-                builder.append(LEXICON.charAt(random.nextInt(LEXICON.length())));
-            }
-            if(IDENTIFIERS.contains(builder.toString())) {
-                builder = new StringBuilder();
-            }
-        }
-        return builder.toString();
     }
 }
